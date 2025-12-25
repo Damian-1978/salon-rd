@@ -1,0 +1,8 @@
+{
+  "name": "SALÓN RD - Catálogo B2B Pro",
+  "description": "Plataforma e-commerce B2B exclusiva para estilistas y salones. Catálogo inteligente, asistente IA y equipos de alta gama.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
