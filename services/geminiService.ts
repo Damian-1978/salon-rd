@@ -15,7 +15,7 @@ No des consejos médicos; siempre profesional.
 `;
 
 export async function getBeautyAdvice(prompt: string) {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = new GoogleGenAI({ apiKey: IMPORT.META.env.VITA_API_KEY });
   
   try {
     const response = await ai.models.generateContent({
