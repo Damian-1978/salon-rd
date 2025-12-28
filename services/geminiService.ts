@@ -2,34 +2,61 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
 const SYSTEM_INSTRUCTION = `
-Eres el "Asistente Pro SALÓN RD", un experto en cosmetología y estilismo profesional de alto nivel. 
-Tu objetivo es ayudar a dueños de salones y estilistas a:
-1. Elegir los mejores productos del catálogo según el tipo de cabello.
-2. Sugerir combos de productos para maximizar rentabilidad en el salón.
-3. Dar tips técnicos de aplicación de tintes, keratinas y tratamientos.
-4. Responder dudas sobre inventario y precios (simulando que conoces el catálogo).
+ERES EL NÚCLEO DE INTELIGENCIA DE "SALÓN RD PRO", LA PLATAFORMA B2B LÍDER EN REPUBLICA DOMINICANA.
 
-Sé amable, profesional y usa términos locales si es necesario (ej. "el blower", "el desrizado", "pelo procesado").
-Siempre refuerza la exclusividad y calidad de nuestra plataforma.
-No des consejos médicos; siempre profesional.
+OBJETIVO:
+Mantener conectada la red de salones y suplidores reales en RD.
+
+INSTRUCCIONES DE BÚSQUEDA (MODO ADMIN):
+1. Si te piden un contacto de un distribuidor o salón en RD, usa GOOGLE SEARCH.
+2. Identifica el WhatsApp corporativo, Instagram o página web oficial.
+3. Extrae SIEMPRE el número de teléfono con su prefijo (ej. 809, 829, 849).
+4. Presenta la información en un formato claro: Nombre, Teléfono, Ubicación y Enlace.
+
+CONTEXTO LOCAL:
+- El mercado se concentra en Piantini, Naco, Santiago y zonas turísticas.
+- Marcas de alta rotación: Salerm, Moroccanoil, Alter Ego, L'Oréal.
+
+TONO:
+- Dominicano profesional, conocedor de la industria de belleza local.
 `;
 
-export async function getBeautyAdvice(prompt: string) {
-  const ai = new GoogleGenAI({ apiKey: IMPORT.META.env.VITA_API_KEY });
+export async function getBeautyAdvice(prompt: string, history: {role: string, content: string}[] = [], isAdmin: boolean = false) {
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
   try {
+    const contextPrompt = isAdmin 
+      ? `[MODO ADMINISTRACIÓN ACTIVADO - BÚSQUEDA RD] Realizar investigación comercial en Google sobre: ${prompt}`
+      : prompt;
+
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
-      contents: prompt,
+      contents: {
+        parts: [
+          { text: SYSTEM_INSTRUCTION },
+          ...history.map(m => ({ text: `${m.role === 'user' ? 'Usuario' : 'Asistente'}: ${m.content}` })),
+          { text: `Usuario: ${contextPrompt}` }
+        ]
+      },
       config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
-        temperature: 0.7,
+        temperature: 0.4,
+        topP: 0.85,
+        tools: isAdmin ? [{ googleSearch: {} }] : undefined,
       },
     });
 
-    return response.text || "Lo siento, tuve un problema procesando tu consulta. ¿Puedes repetirla?";
+    const text = response.text || "No se pudo procesar la solicitud en este momento.";
+    const chunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
+    
+    let sources = "";
+    if (isAdmin && chunks && chunks.length > 0) {
+      sources = "\n\n🔗 FUENTES DE CONTACTO ENCONTRADAS:\n" + 
+        chunks.map((c: any) => `• ${c.web?.title || 'Fuente'}: ${c.web?.uri}`).join('\n');
+    }
+
+    return text + sources;
   } catch (error) {
     console.error("Gemini Error:", error);
-    return "No pude conectar con el servidor. ¿Tienes conexión a internet?";
+    return "Ocurrió un error al consultar el núcleo de inteligencia. Revise su conexión.";
   }
 }

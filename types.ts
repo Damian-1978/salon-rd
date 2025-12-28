@@ -10,16 +10,19 @@ export enum Category {
 }
 
 export type PaymentMethod = 'CARD' | 'TRANSFER' | 'CASH';
-export type PaymentStatus = 'PENDING' | 'PAID';
+export type PaymentStatus = 'PENDING' | 'PAID' | 'CANCELLED';
 
 export interface Product {
   id: string;
+  supplierId: string;
   name: string;
   brand: string;
   category: Category;
   description: string;
-  price: number;
-  bulkPrice: number;
+  basePrice: number; 
+  baseBulkPrice: number; 
+  price: number; 
+  bulkPrice: number; 
   bulkThreshold: number;
   images: string[];
   stock: number;
@@ -27,10 +30,22 @@ export interface Product {
   benefits: string[];
   applicationTime: string;
   professionalWarning: string;
-  videoUrl?: string;
   rating: number;
   reviews: number;
-  includedItems?: string[];
+  content?: string;
+  isPublished?: boolean; // Control de exposición en catálogo
+  steps?: number;
+}
+
+export interface Supplier {
+  id: string;
+  businessName: string;
+  representative: string;
+  productType: string;
+  phone: string;
+  location: string;
+  balance: number; // Ganancias acumuladas
+  isAuthorized: boolean; // Autorización por Admin Maestro
 }
 
 export interface CartItem extends Product {
@@ -41,7 +56,7 @@ export interface StylistProfile {
   name: string;
   salonName: string;
   phone: string;
-  rnc?: string;
+  city: string;
   registeredAt: number;
 }
 
@@ -52,15 +67,16 @@ export interface RegistrationRecord extends StylistProfile {
 
 export interface Order {
   id: string;
+  invoiceNumber: string;
   stylist: StylistProfile;
   items: CartItem[];
   subtotal: number;
-  savings: number;
-  type: 'ORDER' | 'ASSISTANCE';
-  status: 'PENDING' | 'CONTACTED' | 'COMPLETED';
+  total: number;
   paymentMethod: PaymentMethod;
   paymentStatus: PaymentStatus;
+  status: 'PENDING' | 'DISPATCHED' | 'COMPLETED';
   timestamp: number;
+  platformEarning: number; // 20% Markup de la app
 }
 
 export interface ChatMessage {
