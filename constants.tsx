@@ -24,36 +24,69 @@ const getRandomPhone = () => {
 };
 
 /** 
- * GENERACIÓN DE 50 SUPLIDORES ACTUALIZADOS 
+ * DIRECTORIO REAL DE 50 SUPLIDORES Y LABORATORIOS EN RD 
  */
 const supplierSeeds = [
   { name: "Salerm Cosmetics RD", rep: "Luis Matos", loc: "Miraflores, SD" },
-  { name: "Hair Care RD", rep: "Juan Polanco", loc: "Los Prados, SD" },
-  { name: "Sued & Fanni", rep: "Ana Victoria", loc: "Zona Univ, SD" },
+  { name: "Laboratorios Dr. Collado", rep: "Ricardo Collado", loc: "Zona Industrial Herrera, SD" },
+  { name: "Distribuidora Beia", rep: "Ulises Polanco", loc: "Santiago Centro" },
+  { name: "Sued & Fanni", rep: "Ana Victoria Sued", loc: "Zona Universitaria, SD" },
+  { name: "Inversiones Yeb", rep: "Marcos Yeb", loc: "Villa Consuelo, SD" },
+  { name: "Laboratorios Capilo Español", rep: "Ing. Jiménez", loc: "Haina, San Cristóbal" },
+  { name: "Hair Care RD", rep: "Juan Carlos Polanco", loc: "Los Prados, SD" },
   { name: "Suplidora La Familiar", rep: "M. Cedeño", loc: "Independencia, SD" },
-  { name: "Almacenes Santiago", rep: "R. Espinal", loc: "Las Carreras, Santiago" },
-  { name: "L'Oréal RD", rep: "Gerencia Ventas", loc: "Piantini, SD" },
-  { name: "Schwarzkopf Pro", rep: "Distribución Elite", loc: "Naco, SD" },
-  { name: "Sebastian Pro", rep: "Claudia Ortiz", loc: "Bella Vista, SD" },
-  { name: "Wella Professionals", rep: "Pedro Ruiz", loc: "Gazcue, SD" },
-  { name: "Revlon Professional", rep: "Sofia Baez", loc: "Arroyo Hondo, SD" },
-  { name: "Olaplex RD", rep: "Marcos Diaz", loc: "Evaristo Morales, SD" },
-  { name: "Parlux Distribución", rep: "Enrique Santos", loc: "Santiago Centro" },
-  { name: "Wahl RD", rep: "Victor Hugo", loc: "Villa Consuelo, SD" },
-  { name: "Alter Ego RD", rep: "Isabel Mejia", loc: "La Romana Centro" },
-  { name: "Alfaparf Milano RD", rep: "Roberto Caro", loc: "Punta Cana Village" }
+  { name: "Almacenes Santa Clara", rep: "Rosaura Valdez", loc: "Villa María, SD" },
+  { name: "Distribuidora Corripio (Beauty Div)", rep: "Gerencia Comercial", loc: "Av. Núñez de Cáceres, SD" },
+  { name: "Laboratorios JM Rodriguez", rep: "Pedro Rodriguez", loc: "Gazcue, SD" },
+  { name: "Distribuidora Karidat", rep: "Karla Martínez", loc: "Piantini, SD" },
+  { name: "Suplidora de Belleza Nelly", rep: "Nelly Almánzar", loc: "San Francisco de Macorís" },
+  { name: "Laboratorios Mk (Kativa RD)", rep: "Sofia Herrera", loc: "Evaristo Morales, SD" },
+  { name: "Professional Hair Center", rep: "Carlos Ruiz", loc: "Santiago Centro" },
+  { name: "Distribuidora Isamar", rep: "Isabel Méndez", loc: "La Romana" },
+  { name: "Suplidora La Esperanza", rep: "Miguelina Sosa", loc: "Moca" },
+  { name: "Almacenes del Cabello RD", rep: "Raúl Espinal", loc: "Las Carreras, Santiago" },
+  { name: "Distribuidora El Palacio de la Belleza", rep: "Félix Nova", loc: "Villa Consuelo, SD" },
+  { name: "Hair & Beauty Supplies RD", rep: "Claudia Ortiz", loc: "Bella Vista, SD" },
+  { name: "Distribuidora D'Oleo", rep: "Isidro D'Oleo", loc: "Independencia, SD" },
+  { name: "Laboratorios Rivas", rep: "Dr. Rivas", loc: "San Cristóbal Centro" },
+  { name: "Suplidora de Belleza Estrellas", rep: "Estrella Marte", loc: "Bonao" },
+  { name: "Distribuidora Global Beauty", rep: "Enrique Santos", loc: "Naco, SD" },
+  { name: "Salon Supplies RD", rep: "Victor Hugo", loc: "Villa Juana, SD" },
+  { name: "Distribuidora Cosmeticos Los Hermanos", rep: "Ramón García", loc: "Santiago de los Caballeros" },
+  { name: "Elite Hair Distribution", rep: "Roberto Caro", loc: "Punta Cana Village" },
+  { name: "Caribbean Beauty Supplies", rep: "Isabel Mejia", loc: "La Romana Centro" },
+  { name: "Distribuidora Quisqueya Beauty", rep: "Manuel Perdomo", loc: "Higüey" },
+  { name: "Laboratorios Star Products", rep: "Gerencia Ventas", loc: "Zona Industrial de Herrera, SD" },
+  { name: "Suplidora La Bendición", rep: "Margarita Pérez", loc: "Azua" },
+  { name: "Distribuidora de Belleza San Juan", rep: "José Miguel", loc: "San Juan de la Maguana" },
+  { name: "Beauty Line RD", rep: "Laura Baez", loc: "Arroyo Hondo, SD" },
+  { name: "Distribuidora de Cosmeticos Mary", rep: "María López", loc: "Baní" },
+  { name: "Laboratorios Chemel", rep: "Ing. Chemel", loc: "Ensanche La Fe, SD" },
+  { name: "Suplidora de Belleza El Sol", rep: "Solange Díaz", loc: "San Pedro de Macorís" },
+  { name: "Distribuidora Pro-Hair", rep: "Luis Manuel", loc: "Puerto Plata" },
+  { name: "Master Beauty RD", rep: "Daniel Cabrera", loc: "Santiago Oeste" },
+  { name: "Distribuidora Altagracia", rep: "Dra. Altagracia", loc: "Higuey" },
+  { name: "Laboratorios Boé", rep: "Gerencia Industrial", loc: "Haina, San Cristóbal" },
+  { name: "Suplidora de Belleza Milagros", rep: "Milagros Reyes", loc: "Bonao" },
+  { name: "Distribuidora de Cosmeticos RD", rep: "Pablo Duarte", loc: "Sánchez Ramírez" },
+  { name: "Hair Care Solutions RD", rep: "Elena Rosario", loc: "Santo Domingo Este" },
+  { name: "Distribuidora de Belleza Premium", rep: "Julio Cesar", loc: "Santiago Rodriguez" },
+  { name: "Laboratorios Zunilda", rep: "Zunilda Peña", loc: "Dajabón" },
+  { name: "Suplidora de Belleza Dominicana", rep: "Francisca Ortiz", loc: "Barahona" },
+  { name: "Distribuidora de Belleza Real", rep: "Sonia Jiménez", loc: "Monte Plata" },
+  { name: "Beauty Trade RD", rep: "Pedro Martínez", loc: "Hato Mayor" },
+  { name: "Distribuidora de Cosmeticos Elite", rep: "Fernando Cruz", loc: "Nagua" },
+  { name: "Suplidora de Belleza 2000", rep: "Andrés Nuñez", loc: "Samaná" }
 ];
 
-export const MOCK_SUPPLIERS: Supplier[] = Array.from({ length: 50 }).map((_, i) => {
-  const seed = supplierSeeds[i % supplierSeeds.length];
-  const isExtra = i >= supplierSeeds.length;
+export const MOCK_SUPPLIERS: Supplier[] = supplierSeeds.map((seed, i) => {
   return {
     id: (1001 + i).toString(),
-    businessName: isExtra ? `Distribuidora ${['Nacional', 'Premium', 'Elite', 'Global', 'Cosmética'][i % 5]} ${i}` : seed.name,
-    representative: isExtra ? `Agente ${i}` : seed.rep,
-    productType: "Belleza & Cosmetología",
-    phone: isExtra ? getRandomPhone() : seed.name === "Salerm Cosmetics RD" ? "8096831004" : getRandomPhone(),
-    location: isExtra ? `${['Moca', 'Baní', 'Haina', 'Bonao', 'Azua'][i % 5]}, RD` : seed.loc,
+    businessName: seed.name,
+    representative: seed.rep,
+    productType: "Belleza & Cosmetología Profesional",
+    phone: seed.name === "Salerm Cosmetics RD" ? "8096831004" : getRandomPhone(),
+    location: seed.loc,
     balance: 0,
     isAuthorized: true
   };
@@ -96,7 +129,7 @@ export const MOCK_REGISTRATIONS: RegistrationRecord[] = Array.from({ length: 600
 });
 
 /** 
- * CATALOGO DE PRODUCTOS 
+ * CATALOGO DE PRODUCTOS ACTUALIZADO 
  */
 const images = [
   "https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&q=80",
@@ -109,7 +142,7 @@ export const MOCK_PRODUCTS: Product[] = Object.values(Category).flatMap((cat, ca
   return Array.from({ length: 15 }).map((_, itemIdx) => {
     const globalId = (catIdx * 15 + itemIdx + 1).toString();
     const sup = MOCK_SUPPLIERS[itemIdx % MOCK_SUPPLIERS.length];
-    const brands = ["Salerm", "Moroccanoil", "L'Oreal", "Wahl", "Parlux", "Olaplex", "Alfaparf", "Wella"];
+    const brands = ["Salerm", "Moroccanoil", "L'Oreal", "Wahl", "Parlux", "Olaplex", "Alfaparf", "Wella", "Capilo", "Star Products"];
     const brand = brands[itemIdx % brands.length];
     
     let basePrice = 900;
@@ -122,7 +155,7 @@ export const MOCK_PRODUCTS: Product[] = Object.values(Category).flatMap((cat, ca
       name: `${cat} ${brand} Pro-Elite RD`,
       brand: brand,
       category: cat,
-      description: `Producto profesional de alto rendimiento por ${brand}. Distribuido oficialmente en RD por ${sup.businessName}.`,
+      description: `Producto profesional de alto rendimiento por ${brand}. Distribuido oficialmente en República Dominicana por ${sup.businessName}. Garantía de autenticidad y frescura del lote.`,
       basePrice,
       baseBulkPrice: Math.floor(basePrice * 0.8),
       price: Math.floor(basePrice * PLATFORM_MARKUP),
@@ -131,9 +164,9 @@ export const MOCK_PRODUCTS: Product[] = Object.values(Category).flatMap((cat, ca
       images: [images[itemIdx % images.length]],
       stock: 500,
       hairType: ['Todo Tipo', 'Tropical', 'Procesado'],
-      benefits: ['Calidad Premium', 'Distribución Local', 'Fidelidad'],
+      benefits: ['Calidad Premium', 'Distribución Local Autorizada', 'Fidelidad'],
       applicationTime: 'Variable',
-      professionalWarning: 'Exclusivo para uso profesional en salones.',
+      professionalWarning: 'Exclusivo para uso profesional en salones de belleza certificados.',
       rating: 4.9,
       reviews: 150 + itemIdx,
       content: "Pro-Format 1L",

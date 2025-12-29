@@ -6,7 +6,7 @@ import {
   Eye, EyeOff, Calendar, UserCheck, CheckSquare, Square, Save,
   Users, Truck, FileText, Share2, Printer, Download, ArrowLeft,
   Phone, MessageSquare, ExternalLink, Copy, Globe, Sparkles, Instagram,
-  SearchCode, MapPin, Building2, BadgeCheck, AlertCircle
+  SearchCode, MapPin, Building2, BadgeCheck, AlertCircle, Edit
 } from 'lucide-react';
 import { Product, Category, Order, RegistrationRecord, Supplier, CartItem } from '../types';
 
@@ -32,6 +32,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
   const [activeTab, setActiveTab] = useState<'STATS' | 'PRODUCTS' | 'ORDERS' | 'SUPPLIERS' | 'SALONS'>('STATS');
   const [loggedSupplier, setLoggedSupplier] = useState<Supplier | null>(null);
   const [search, setSearch] = useState('');
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,6 +62,15 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
   const toggleProductPublish = (id: string) => {
     const updated = products.map(p => p.id === id ? { ...p, isPublished: !p.isPublished } : p);
     onUpdateProducts(updated);
+  };
+
+  const handleSaveProduct = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingProduct) return;
+    
+    const updated = products.map(p => p.id === editingProduct.id ? editingProduct : p);
+    onUpdateProducts(updated);
+    setEditingProduct(null);
   };
 
   const myOrders = useMemo(() => {
@@ -139,7 +149,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
            </div>
         </div>
         <div className="flex items-center gap-2">
-           {authMode !== 'NONE' && <button onClick={() => setAuthMode('NONE')} className="p-3 bg-white/10 rounded-xl hover:bg-white/20"><LogOut className="w-4 h-4" /></button>}
+           {authMode !== 'NONE' && <button onClick={() => {setAuthMode('NONE'); setLoggedSupplier(null);}} className="p-3 bg-white/10 rounded-xl hover:bg-white/20"><LogOut className="w-4 h-4" /></button>}
            <button onClick={onClose} className="p-3 bg-white/10 rounded-xl hover:bg-white/20"><X className="w-5 h-5" /></button>
         </div>
       </div>
@@ -159,20 +169,20 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
       ) : (
         <div className="flex-1 flex flex-col overflow-hidden">
            <div className="bg-white border-b px-6 py-4 flex gap-3 overflow-x-auto no-scrollbar shadow-sm shrink-0">
-              <button onClick={() => setActiveTab('STATS')} className={`shrink-0 px-6 py-3 rounded-2xl text-[9px] font-black uppercase tracking-widest ${activeTab === 'STATS' ? 'bg-rose-900 text-white' : 'bg-gray-50 text-gray-400'}`}>Métricas</button>
-              <button onClick={() => setActiveTab('PRODUCTS')} className={`shrink-0 px-6 py-3 rounded-2xl text-[9px] font-black uppercase tracking-widest ${activeTab === 'PRODUCTS' ? 'bg-rose-900 text-white' : 'bg-gray-50 text-gray-400'}`}>Inventario</button>
-              <button onClick={() => setActiveTab('ORDERS')} className={`shrink-0 px-6 py-3 rounded-2xl text-[9px] font-black uppercase tracking-widest ${activeTab === 'ORDERS' ? 'bg-rose-900 text-white' : 'bg-gray-50 text-gray-400'}`}>Facturación</button>
+              <button onClick={() => {setActiveTab('STATS'); setEditingProduct(null);}} className={`shrink-0 px-6 py-3 rounded-2xl text-[9px] font-black uppercase tracking-widest ${activeTab === 'STATS' ? 'bg-rose-900 text-white' : 'bg-gray-50 text-gray-400'}`}>Métricas</button>
+              <button onClick={() => {setActiveTab('PRODUCTS'); setEditingProduct(null);}} className={`shrink-0 px-6 py-3 rounded-2xl text-[9px] font-black uppercase tracking-widest ${activeTab === 'PRODUCTS' ? 'bg-rose-900 text-white' : 'bg-gray-50 text-gray-400'}`}>Inventario</button>
+              <button onClick={() => {setActiveTab('ORDERS'); setEditingProduct(null);}} className={`shrink-0 px-6 py-3 rounded-2xl text-[9px] font-black uppercase tracking-widest ${activeTab === 'ORDERS' ? 'bg-rose-900 text-white' : 'bg-gray-50 text-gray-400'}`}>Facturación</button>
               {authMode === 'MASTER' && (
                 <>
-                  <button onClick={() => { setActiveTab('SUPPLIERS'); setSearch(''); }} className={`shrink-0 px-6 py-3 rounded-2xl text-[9px] font-black uppercase tracking-widest ${activeTab === 'SUPPLIERS' ? 'bg-rose-900 text-white' : 'bg-gray-50 text-gray-400'}`}>50 Suplidores</button>
-                  <button onClick={() => { setActiveTab('SALONS'); setSearch(''); }} className={`shrink-0 px-6 py-3 rounded-2xl text-[9px] font-black uppercase tracking-widest ${activeTab === 'SALONS' ? 'bg-rose-900 text-white' : 'bg-gray-50 text-gray-400'}`}>600 Salones</button>
+                  <button onClick={() => { setActiveTab('SUPPLIERS'); setSearch(''); setEditingProduct(null); }} className={`shrink-0 px-6 py-3 rounded-2xl text-[9px] font-black uppercase tracking-widest ${activeTab === 'SUPPLIERS' ? 'bg-rose-900 text-white' : 'bg-gray-50 text-gray-400'}`}>50 Suplidores</button>
+                  <button onClick={() => { setActiveTab('SALONS'); setSearch(''); setEditingProduct(null); }} className={`shrink-0 px-6 py-3 rounded-2xl text-[9px] font-black uppercase tracking-widest ${activeTab === 'SALONS' ? 'bg-rose-900 text-white' : 'bg-gray-50 text-gray-400'}`}>600 Salones</button>
                 </>
               )}
            </div>
 
            <div className="flex-1 overflow-y-auto p-8 bg-gray-50/30 no-scrollbar space-y-6 pb-40">
               {/* BUSCADOR PARA TABLAS */}
-              {activeTab !== 'STATS' && (
+              {activeTab !== 'STATS' && !editingProduct && (
                 <div className="relative mb-8">
                   <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-rose-200" />
                   <input 
@@ -215,10 +225,10 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
                 </div>
               )}
 
-              {activeTab === 'PRODUCTS' && (
+              {activeTab === 'PRODUCTS' && !editingProduct && (
                 <div className="grid grid-cols-1 gap-4 animate-in fade-in duration-500">
                    {filteredProducts.map(p => (
-                     <div key={p.id} className="bg-white p-6 rounded-[2.5rem] border border-rose-50 flex items-center justify-between gap-6 shadow-sm group">
+                     <div key={p.id} className="bg-white p-6 rounded-[2.5rem] border border-rose-50 flex items-center justify-between gap-6 shadow-sm group hover:shadow-md transition-all">
                         <div className="flex items-center gap-4 flex-1">
                            <img src={p.images[0]} className="w-14 h-14 rounded-2xl object-cover grayscale group-hover:grayscale-0 transition-all" />
                            <div className="min-w-0">
@@ -226,13 +236,19 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
                               <p className="text-[9px] font-black text-rose-300 uppercase">{p.brand} • {p.category}</p>
                            </div>
                         </div>
-                        <div className="flex items-center gap-8 text-right shrink-0">
-                           <div>
+                        <div className="flex items-center gap-4 text-right shrink-0">
+                           <div className="hidden sm:block">
                               <p className="text-[8px] font-black text-gray-300 uppercase">Stock</p>
                               <p className={`text-sm font-black ${p.stock < 20 ? 'text-rose-600' : 'text-gray-900'}`}>{p.stock}</p>
                            </div>
+                           <button 
+                             onClick={() => setEditingProduct(p)}
+                             className="p-4 bg-rose-50 text-rose-900 rounded-2xl hover:bg-rose-900 hover:text-white transition-all active:scale-90"
+                           >
+                             <Edit className="w-4 h-4" />
+                           </button>
                            <div className="flex flex-col items-center gap-1">
-                              <p className="text-[8px] font-black text-gray-300 uppercase">Visibilidad</p>
+                              <p className="text-[8px] font-black text-gray-300 uppercase">Catálogo</p>
                               <button 
                                 onClick={() => toggleProductPublish(p.id)}
                                 className={`w-10 h-6 rounded-full relative transition-colors ${p.isPublished ? 'bg-emerald-500' : 'bg-gray-200'}`}
@@ -243,6 +259,91 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
                         </div>
                      </div>
                    ))}
+                </div>
+              )}
+
+              {activeTab === 'PRODUCTS' && editingProduct && (
+                <div className="max-w-2xl mx-auto animate-in slide-in-from-bottom-5">
+                   <button onClick={() => setEditingProduct(null)} className="flex items-center gap-2 text-rose-400 font-black uppercase text-[10px] tracking-widest mb-6 active:scale-90">
+                      <ArrowLeft className="w-4 h-4" /> Volver al listado
+                   </button>
+                   
+                   <form onSubmit={handleSaveProduct} className="bg-white p-10 rounded-[3.5rem] border border-rose-100 shadow-2xl space-y-8">
+                      <div className="flex items-center gap-6 mb-4">
+                        <img src={editingProduct.images[0]} className="w-24 h-24 rounded-3xl object-cover border-4 border-rose-50" />
+                        <div>
+                          <h3 className="text-xl font-brand font-bold text-gray-900">Editor de Publicación</h3>
+                          <p className="text-[10px] font-black text-rose-300 uppercase tracking-widest">ID: {editingProduct.id}</p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="space-y-1">
+                               <label className="text-[8px] font-black text-gray-400 uppercase ml-4">Nombre del Producto</label>
+                               <input 
+                                 type="text" 
+                                 value={editingProduct.name}
+                                 onChange={e => setEditingProduct({...editingProduct, name: e.target.value})}
+                                 className="w-full bg-gray-50 border-none rounded-2xl py-4 px-6 text-xs font-bold focus:ring-4 focus:ring-rose-50 outline-none"
+                               />
+                            </div>
+                            <div className="space-y-1">
+                               <label className="text-[8px] font-black text-gray-400 uppercase ml-4">Marca Profesional</label>
+                               <input 
+                                 type="text" 
+                                 value={editingProduct.brand}
+                                 onChange={e => setEditingProduct({...editingProduct, brand: e.target.value})}
+                                 className="w-full bg-gray-50 border-none rounded-2xl py-4 px-6 text-xs font-bold focus:ring-4 focus:ring-rose-50 outline-none"
+                               />
+                            </div>
+                         </div>
+
+                         <div className="space-y-1">
+                            <label className="text-[8px] font-black text-gray-400 uppercase ml-4">Descripción B2B</label>
+                            <textarea 
+                              rows={3}
+                              value={editingProduct.description}
+                              onChange={e => setEditingProduct({...editingProduct, description: e.target.value})}
+                              className="w-full bg-gray-50 border-none rounded-2xl py-4 px-6 text-xs font-bold focus:ring-4 focus:ring-rose-50 outline-none resize-none"
+                            />
+                         </div>
+
+                         <div className="grid grid-cols-3 gap-4">
+                            <div className="space-y-1">
+                               <label className="text-[8px] font-black text-gray-400 uppercase ml-4">P. Base (RD$)</label>
+                               <input 
+                                 type="number" 
+                                 value={editingProduct.basePrice}
+                                 onChange={e => setEditingProduct({...editingProduct, basePrice: parseInt(e.target.value) || 0})}
+                                 className="w-full bg-gray-50 border-none rounded-2xl py-4 px-6 text-xs font-black focus:ring-4 focus:ring-rose-50 outline-none"
+                               />
+                            </div>
+                            <div className="space-y-1">
+                               <label className="text-[8px] font-black text-gray-400 uppercase ml-4">P. Bulk (RD$)</label>
+                               <input 
+                                 type="number" 
+                                 value={editingProduct.baseBulkPrice}
+                                 onChange={e => setEditingProduct({...editingProduct, baseBulkPrice: parseInt(e.target.value) || 0})}
+                                 className="w-full bg-gray-50 border-none rounded-2xl py-4 px-6 text-xs font-black focus:ring-4 focus:ring-rose-50 outline-none"
+                               />
+                            </div>
+                            <div className="space-y-1">
+                               <label className="text-[8px] font-black text-gray-400 uppercase ml-4">Stock Actual</label>
+                               <input 
+                                 type="number" 
+                                 value={editingProduct.stock}
+                                 onChange={e => setEditingProduct({...editingProduct, stock: parseInt(e.target.value) || 0})}
+                                 className="w-full bg-gray-50 border-none rounded-2xl py-4 px-6 text-xs font-black focus:ring-4 focus:ring-rose-50 outline-none"
+                               />
+                            </div>
+                         </div>
+                      </div>
+
+                      <button type="submit" className="w-full bg-rose-gradient text-white py-6 rounded-3xl font-black uppercase text-[10px] tracking-widest shadow-xl flex items-center justify-center gap-3 active:scale-95 transition-all">
+                         <Save className="w-4 h-4" /> Guardar Cambios Definitivamente
+                      </button>
+                   </form>
                 </div>
               )}
 
